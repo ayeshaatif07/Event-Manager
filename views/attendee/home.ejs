@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attendee Home Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS & Icons for styling and icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-----------------------------------------------------------------------MY OWN CODE ------------------------------------------------------------------------------>
+
+  <style>
+    /*background with gradient and image */
+    body {
+      background: linear-gradient(to right, #cbe2f3, #7bbaee);
+      min-height: 100vh;
+      padding-top: 50px;
+    }
+
+    /*main white container styling */
+    .main-container {
+      background: #ffffff;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /*button hover effect */
+    .btn-hover:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease-in-out;
+    }
+
+    /*styling for event list items */
+    .event-list li {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    /*remove underline from links inside list */
+    .event-list a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!--main content container -->
+  <div class="container main-container">
+
+    <!--page header with title and back-to-home button -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="text-primary">
+        <i class="bi bi-person-badge-fill"></i> Attendee Home
+      </h1>
+
+      <!--link to return to the main landing page -->
+      <a href="/" class="btn btn-outline-secondary btn-hover">
+        <i class="bi bi-house-door-fill me-1"></i> Back to Main Page
+      </a>
+    </div>
+
+    <!--display site name and description from the database -->
+    <p class="lead mb-4">
+      <strong><%= siteSettings.site_name %></strong> — <%= siteSettings.site_description %>
+    </p>
+
+    <!--section for listing upcoming events -->
+    <h3 class="text-success mb-3">
+      <i class="bi bi-calendar-event"></i> Upcoming Events
+    </h3>
+
+    <!--unordered list of all published events -->
+    <ul class="list-unstyled event-list">
+      <% events.forEach(event => {
+        // Format event date as DD-MM-YYYY
+        const dateObj = new Date(event.date);
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+        const formattedDate = `${day}-${month}-${year}`;
+      %>
+        <li>
+          <div class="d-flex justify-content-between align-items-center">
+            <!--show event title and formatted date -->
+            <div>
+              <h5 class="mb-1 text-dark"><%= event.title %></h5>
+              <small class="text-muted">
+                <i class="bi bi-calendar3"></i> <%= formattedDate %>
+              </small>
+            </div>
+
+            <!--button to view and book tickets -->
+            <a href="/attendee/event/<%= event.id %>" class="btn btn-sm btn-primary btn-hover">
+              <i class="bi bi-ticket-detailed"></i> View & Book
+            </a>
+          </div>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+
+<!-----------------------------------------------------------------------MY OWN CODE ------------------------------------------------------------------------------>
+
+  <!--include Bootstrap JS for functionality like responsive navs and toasts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

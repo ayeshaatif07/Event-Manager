@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= event.title %> - Attendee Event Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- iincluding the Bootstrap CSS and Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-----------------------------------------------------------------------MY OWN CODE ------------------------------------------------------------------------------>
+
+  <style>
+    /*page background with gradient and image */
+    body {
+      background: linear-gradient(to right, #cbe2f3, #7bbaee);
+      min-height: 100vh;
+      padding-top: 40px;
+    }
+
+    /*styling for the white card container */
+    .event-card {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    /*hover effect for buttons */
+    .btn-hover:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /*positioning for the booked tickets popup */
+    #popup {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1050;
+    }
+  </style>
+</head>
+<body>
+
+  <!--the evvent details container -->
+  <div class="container event-card">
+    <h2 class="text-primary mb-4"><i class="bi bi-ticket-perforated-fill"></i> <%= event.title %></h2>
+
+    <!--display formatted event date -->
+    <p><strong><i class="bi bi-calendar-event"></i> Date:</strong> 
+      <% 
+        let formattedDate = new Date(event.date).toLocaleDateString('en-GB'); 
+      %>
+      <%= formattedDate %>
+    </p>
+
+    <!--event description -->
+    <p><strong><i class="bi bi-info-circle-fill"></i> Description:</strong> <%= event.description %></p>
+
+    <!--ticket prices and availability -->
+    <p>
+      <strong><i class="bi bi-cash-coin"></i> Full Price Ticket:</strong> $<%= event.full_price %>
+      <span class="text-muted">(Available: <%= event.full_price_qty %>)</span>
+    </p>
+    <p>
+      <strong><i class="bi bi-currency-exchange"></i> Concession Ticket:</strong> $<%= event.concession_price %>
+      <span class="text-muted">(Available: <%= event.concession_qty %>)</span>
+    </p>
+
+    <!--ticket booking form -->
+    <form action="/attendee/event/<%= event.id %>/book" method="POST" class="mt-4">
+      <div class="mb-3">
+        <label class="form-label">Name:</label>
+        <input type="text" name="attendee_name" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Full Price Tickets:</label>
+        <input type="number" name="full_price_qty_booked" class="form-control" min="0" max="<%= event.full_price_qty %>" />
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">Concession Tickets:</label>
+        <input type="number" name="concession_qty_booked" class="form-control" min="0" max="<%= event.concession_qty %>" />
+      </div>
+
+      <!--submit booking -->
+      <button type="submit" class="btn btn-success btn-hover">
+        <i class="bi bi-cart-check-fill"></i> Book Tickets
+      </button>
+    </form>
+
+    <!--link to go back to attendee home -->
+    <a href="/attendee" class="btn btn-outline-secondary btn-hover mt-4">
+      <i class="bi bi-arrow-left-circle"></i> Back to Attendee Home
+    </a>
+  </div>
+
+  <!--success message popup if the  booking was  successfull -->
+  <% if (success) { %>
+    <div id="popup" class="toast align-items-center text-white bg-success border-0 show" role="alert">
+      <div class="d-flex">
+        <div class="toast-body">
+          ✅ Tickets successfully booked!
+        </div>
+      </div>
+    </div>
+
+    <!-- hide the popup and redirect to the attendee page after 3 seconds -->
+    <script>
+      setTimeout(() => {
+        document.getElementById("popup").style.display = "none";
+        window.location.href = "/attendee";
+      }, 3000);
+    </script>
+  <% } %>
+
+<!-----------------------------------------------------------------------MY OWN CODE ------------------------------------------------------------------------------>
+
+  <!-- Bootstrap JavaScript for interactivity -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
